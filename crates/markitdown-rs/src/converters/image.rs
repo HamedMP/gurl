@@ -9,10 +9,10 @@ impl DocumentConverter for ImageConverter {
     }
 
     fn accepts(&self, info: &StreamInfo) -> bool {
-        if let Some(mime) = &info.mime_type {
-            if mime.starts_with("image/") {
-                return true;
-            }
+        if let Some(mime) = &info.mime_type
+            && mime.starts_with("image/")
+        {
+            return true;
         }
         matches!(
             info.extension.as_deref(),

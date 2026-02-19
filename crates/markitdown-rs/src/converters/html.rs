@@ -22,14 +22,14 @@ impl DocumentConverter for HtmlConverter {
         // Step 1: Next.js RSC payload extraction.
         // Modern Next.js App Router sites embed content as RSC data, not in the DOM.
         // Try this first — it gives the cleanest article content without sidebar noise.
-        if let Some(rsc_md) = extract_nextjs_rsc(&html) {
-            if rsc_md.len() > 200 {
-                let mut result = ConversionResult::new(&rsc_md);
-                if let Some(t) = title.clone() {
-                    result = result.with_title(t);
-                }
-                return Ok(result);
+        if let Some(rsc_md) = extract_nextjs_rsc(&html)
+            && rsc_md.len() > 200
+        {
+            let mut result = ConversionResult::new(&rsc_md);
+            if let Some(t) = title.clone() {
+                result = result.with_title(t);
             }
+            return Ok(result);
         }
 
         // Step 2: Direct element extraction (article, main, etc.)
@@ -78,13 +78,13 @@ fn extract_title(html: &str) -> Option<String> {
     use scraper::{Html, Selector};
     let doc = Html::parse_document(html);
 
-    if let Ok(sel) = Selector::parse("title") {
-        if let Some(el) = doc.select(&sel).next() {
-            let t = el.text().collect::<String>();
-            let t = t.trim().to_string();
-            if !t.is_empty() {
-                return Some(t);
-            }
+    if let Ok(sel) = Selector::parse("title")
+        && let Some(el) = doc.select(&sel).next()
+    {
+        let t = el.text().collect::<String>();
+        let t = t.trim().to_string();
+        if !t.is_empty() {
+            return Some(t);
         }
     }
     None
@@ -107,13 +107,13 @@ fn extract_main_element(html: &str) -> Option<String> {
     let mut best_len = 0;
 
     for sel_str in &selectors {
-        if let Ok(selector) = Selector::parse(sel_str) {
-            if let Some(el) = doc.select(&selector).next() {
-                let inner = el.inner_html();
-                if inner.len() > best_len {
-                    best_len = inner.len();
-                    best = Some(inner);
-                }
+        if let Ok(selector) = Selector::parse(sel_str)
+            && let Some(el) = doc.select(&selector).next()
+        {
+            let inner = el.inner_html();
+            if inner.len() > best_len {
+                best_len = inner.len();
+                best = Some(inner);
             }
         }
     }
@@ -135,7 +135,7 @@ fn strip_inline_noise(html: &str) -> String {
             }
         }
     }
-    fragments.sort_by(|a, b| b.len().cmp(&a.len()));
+    fragments.sort_by_key(|b| std::cmp::Reverse(b.len()));
     let mut cleaned = html.to_string();
     for frag in &fragments {
         if let Some(pos) = cleaned.find(frag.as_str()) {
@@ -297,10 +297,10 @@ fn unescape_rsc(s: &str) -> String {
                 Some('u') => {
                     // Unicode escape: \uXXXX
                     let hex: String = chars.by_ref().take(4).collect();
-                    if let Ok(cp) = u32::from_str_radix(&hex, 16) {
-                        if let Some(ch) = char::from_u32(cp) {
-                            result.push(ch);
-                        }
+                    if let Ok(cp) = u32::from_str_radix(&hex, 16)
+                        && let Some(ch) = char::from_u32(cp)
+                    {
+                        result.push(ch);
                     }
                 }
                 Some(other) => {
@@ -414,10 +414,10 @@ fn extract_children_text(s: &str) -> String {
     let trimmed = s.trim_start();
 
     // Direct string: "children":"some text"
-    if trimmed.starts_with('"') {
-        if let Some((text, _)) = extract_quoted_string(trimmed) {
-            return text;
-        }
+    if trimmed.starts_with('"')
+        && let Some((text, _)) = extract_quoted_string(trimmed)
+    {
+        return text;
     }
 
     // Array of mixed content: "children":["text", element, "more text"]
@@ -536,7 +536,7 @@ fn strip_noise(html: &str) -> String {
         }
     }
 
-    fragments_to_remove.sort_by(|a, b| b.len().cmp(&a.len()));
+    fragments_to_remove.sort_by_key(|b| std::cmp::Reverse(b.len()));
 
     let mut cleaned = html.to_string();
     for fragment in &fragments_to_remove {

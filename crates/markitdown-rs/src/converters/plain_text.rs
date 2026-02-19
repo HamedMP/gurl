@@ -8,10 +8,10 @@ impl DocumentConverter for PlainTextConverter {
     }
 
     fn accepts(&self, info: &StreamInfo) -> bool {
-        if let Some(mime) = &info.mime_type {
-            if mime.starts_with("text/") {
-                return true;
-            }
+        if let Some(mime) = &info.mime_type
+            && mime.starts_with("text/")
+        {
+            return true;
         }
         matches!(
             info.extension.as_deref(),

@@ -33,7 +33,7 @@ impl DocumentConverter for PptxConverter {
                 }
             }
         }
-        slide_paths.sort_by(|a, b| extract_slide_number(a).cmp(&extract_slide_number(b)));
+        slide_paths.sort_by_key(|a| extract_slide_number(a));
 
         let mut md = String::new();
         let mut title: Option<String> = None;

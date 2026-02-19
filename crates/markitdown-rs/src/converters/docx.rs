@@ -105,15 +105,13 @@ fn detect_heading_level(p: &docx_rs::Paragraph) -> Option<usize> {
     if let Some(style) = &p.property.style {
         let id = &style.val;
         // Common DOCX heading style IDs
-        if id.starts_with("Heading") || id.starts_with("heading") {
-            if let Some(level_str) = id
+        if (id.starts_with("Heading") || id.starts_with("heading"))
+            && let Some(level_str) = id
                 .strip_prefix("Heading")
                 .or_else(|| id.strip_prefix("heading"))
-            {
-                if let Ok(level) = level_str.parse::<usize>() {
-                    return Some(level.min(6));
-                }
-            }
+            && let Ok(level) = level_str.parse::<usize>()
+        {
+            return Some(level.min(6));
         }
         match id.as_str() {
             "Title" | "title" => return Some(1),

@@ -17,30 +17,27 @@ pub fn detect(input: &[u8], info: &StreamInfo) -> StreamInfo {
         }
 
         // 2. Fallback: guess from extension
-        if result.mime_type.is_none() {
-            if let Some(ext) = &result.extension {
-                if let Some(mime) = mime_guess::from_ext(ext).first() {
-                    result.mime_type = Some(mime.to_string());
-                }
-            }
+        if result.mime_type.is_none()
+            && let Some(ext) = &result.extension
+            && let Some(mime) = mime_guess::from_ext(ext).first()
+        {
+            result.mime_type = Some(mime.to_string());
         }
 
         // 3. Fallback: guess from filename
-        if result.mime_type.is_none() {
-            if let Some(filename) = &result.filename {
-                if let Some(mime) = mime_guess::from_path(filename).first() {
-                    result.mime_type = Some(mime.to_string());
-                }
-            }
+        if result.mime_type.is_none()
+            && let Some(filename) = &result.filename
+            && let Some(mime) = mime_guess::from_path(filename).first()
+        {
+            result.mime_type = Some(mime.to_string());
         }
 
         // 4. Fallback: guess from URL
-        if result.mime_type.is_none() {
-            if let Some(url) = &result.url {
-                if let Some(mime) = mime_guess::from_path(url).first() {
-                    result.mime_type = Some(mime.to_string());
-                }
-            }
+        if result.mime_type.is_none()
+            && let Some(url) = &result.url
+            && let Some(mime) = mime_guess::from_path(url).first()
+        {
+            result.mime_type = Some(mime.to_string());
         }
 
         // 5. Heuristic: check if it looks like HTML
@@ -62,12 +59,12 @@ pub fn detect(input: &[u8], info: &StreamInfo) -> StreamInfo {
     // Extract extension from filename/URL if not set
     if result.extension.is_none() {
         let source = result.filename.as_deref().or(result.url.as_deref());
-        if let Some(s) = source {
-            if let Some(ext) = s.rsplit('.').next() {
-                let ext = ext.split(['?', '#']).next().unwrap_or(ext);
-                if ext.len() <= 10 {
-                    result.extension = Some(ext.to_lowercase());
-                }
+        if let Some(s) = source
+            && let Some(ext) = s.rsplit('.').next()
+        {
+            let ext = ext.split(['?', '#']).next().unwrap_or(ext);
+            if ext.len() <= 10 {
+                result.extension = Some(ext.to_lowercase());
             }
         }
     }

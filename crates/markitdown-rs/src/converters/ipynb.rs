@@ -135,13 +135,13 @@ impl CellOutput {
         }
 
         // Try data.text/plain (execute_result, display_data)
-        if let Some(data) = &self.data {
-            if let Some(text) = &data.text_plain {
-                return Some(match text {
-                    CellSource::Single(s) => s.clone(),
-                    CellSource::Lines(lines) => lines.join(""),
-                });
-            }
+        if let Some(data) = &self.data
+            && let Some(text) = &data.text_plain
+        {
+            return Some(match text {
+                CellSource::Single(s) => s.clone(),
+                CellSource::Lines(lines) => lines.join(""),
+            });
         }
 
         None

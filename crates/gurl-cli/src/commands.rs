@@ -159,7 +159,7 @@ pub async fn execute(method: &str, args: HttpArgs) -> Result<()> {
     Ok(())
 }
 
-fn select_path<'a>(value: &'a serde_json::Value, path: &str) -> serde_json::Value {
+fn select_path(value: &serde_json::Value, path: &str) -> serde_json::Value {
     let mut current = value;
     for key in path.split('.') {
         match current {
