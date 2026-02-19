@@ -9,10 +9,8 @@ impl DocumentConverter for IpynbConverter {
     }
 
     fn accepts(&self, info: &StreamInfo) -> bool {
-        matches!(
-            info.mime_type.as_deref(),
-            Some("application/x-ipynb+json")
-        ) || matches!(info.extension.as_deref(), Some("ipynb"))
+        matches!(info.mime_type.as_deref(), Some("application/x-ipynb+json"))
+            || matches!(info.extension.as_deref(), Some("ipynb"))
     }
 
     fn convert(&self, input: &[u8], _info: &StreamInfo) -> crate::Result<ConversionResult> {

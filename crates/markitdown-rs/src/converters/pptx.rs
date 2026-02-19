@@ -33,9 +33,7 @@ impl DocumentConverter for PptxConverter {
                 }
             }
         }
-        slide_paths.sort_by(|a, b| {
-            extract_slide_number(a).cmp(&extract_slide_number(b))
-        });
+        slide_paths.sort_by(|a, b| extract_slide_number(a).cmp(&extract_slide_number(b)));
 
         let mut md = String::new();
         let mut title: Option<String> = None;
@@ -83,9 +81,9 @@ fn read_zip_text(
     archive: &mut zip::ZipArchive<Cursor<&[u8]>>,
     path: &str,
 ) -> crate::Result<String> {
-    let mut file = archive.by_name(path).map_err(|e| {
-        crate::Error::ConversionFailed(format!("Entry '{path}' not found: {e}"))
-    })?;
+    let mut file = archive
+        .by_name(path)
+        .map_err(|e| crate::Error::ConversionFailed(format!("Entry '{path}' not found: {e}")))?;
     let mut data = String::new();
     file.read_to_string(&mut data)
         .map_err(|e| crate::Error::ConversionFailed(format!("Failed to read '{path}': {e}")))?;

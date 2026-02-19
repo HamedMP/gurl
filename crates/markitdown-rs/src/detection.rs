@@ -78,7 +78,10 @@ pub fn detect(input: &[u8], info: &StreamInfo) -> StreamInfo {
 fn looks_like_html(input: &[u8]) -> bool {
     let prefix = &input[..input.len().min(512)];
     let s = String::from_utf8_lossy(prefix).to_lowercase();
-    s.contains("<!doctype html") || s.contains("<html") || s.contains("<head") || s.contains("<body")
+    s.contains("<!doctype html")
+        || s.contains("<html")
+        || s.contains("<head")
+        || s.contains("<body")
 }
 
 fn looks_like_json(input: &[u8]) -> bool {

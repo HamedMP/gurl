@@ -46,10 +46,30 @@ impl DocumentConverter for ZipConverter {
                 let ext = name.rsplit('.').next().unwrap_or("").to_lowercase();
                 if matches!(
                     ext.as_str(),
-                    "txt" | "md" | "csv" | "json" | "yaml" | "yml" | "toml"
-                        | "xml" | "html" | "css" | "js" | "ts" | "py"
-                        | "rs" | "go" | "java" | "c" | "cpp" | "h"
-                        | "sh" | "cfg" | "ini" | "log" | "rst"
+                    "txt"
+                        | "md"
+                        | "csv"
+                        | "json"
+                        | "yaml"
+                        | "yml"
+                        | "toml"
+                        | "xml"
+                        | "html"
+                        | "css"
+                        | "js"
+                        | "ts"
+                        | "py"
+                        | "rs"
+                        | "go"
+                        | "java"
+                        | "c"
+                        | "cpp"
+                        | "h"
+                        | "sh"
+                        | "cfg"
+                        | "ini"
+                        | "log"
+                        | "rst"
                 ) {
                     let mut content = String::new();
                     if file.read_to_string(&mut content).is_ok() && !content.is_empty() {

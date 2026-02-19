@@ -6,8 +6,8 @@ pub use request::{Body, GurlRequest};
 pub use response::{ResponseMeta, Timing, TlsInfo};
 
 use crate::output::envelope::{Content, GurlResponse, RequestMeta};
-use markitdown_rs::converter::StreamInfo;
 use markitdown_rs::MarkItDown;
+use markitdown_rs::converter::StreamInfo;
 use reqwest::Client;
 use std::time::Instant;
 
@@ -84,10 +84,9 @@ impl GurlClient {
         // Build content: try JSON first, then markitdown conversion, then raw
         let content = if content_type.contains("application/json") {
             // JSON: parse and return structured
-            let json_val = serde_json::from_slice(&body_bytes)
-                .unwrap_or(serde_json::Value::String(
-                    String::from_utf8_lossy(&body_bytes).into_owned(),
-                ));
+            let json_val = serde_json::from_slice(&body_bytes).unwrap_or(
+                serde_json::Value::String(String::from_utf8_lossy(&body_bytes).into_owned()),
+            );
             Content {
                 content_type: "json".to_string(),
                 original_type: content_type,

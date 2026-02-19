@@ -119,7 +119,8 @@ fn extract_main_element(html: &str) -> Option<String> {
     }
 
     // Strip inline scripts/styles from extracted element
-    best.filter(|_| best_len > 200).map(|h| strip_inline_noise(&h))
+    best.filter(|_| best_len > 200)
+        .map(|h| strip_inline_noise(&h))
 }
 
 fn strip_inline_noise(html: &str) -> String {
@@ -355,10 +356,8 @@ fn extract_rsc_text_fragments(content: &str) -> Vec<String> {
                     // Find the children of this element
                     let search_area = &content[i + 4 + after_tag..];
                     if let Some(children_start) = search_area.find("\"children\":") {
-                        let children_area =
-                            &search_area[children_start + 11..];
-                        let extracted =
-                            extract_children_text(children_area);
+                        let children_area = &search_area[children_start + 11..];
+                        let extracted = extract_children_text(children_area);
                         if !extracted.is_empty() {
                             let text = extracted.trim().to_string();
                             if text.len() > 2
@@ -368,20 +367,13 @@ fn extract_rsc_text_fragments(content: &str) -> Vec<String> {
                                 && seen_text.insert(text.clone())
                             {
                                 if is_heading {
-                                    let level =
-                                        tag_lower.as_bytes()[1] - b'0';
-                                    let prefix =
-                                        "#".repeat(level as usize);
-                                    fragments.push(format!(
-                                        "\n\n{prefix} {text}\n"
-                                    ));
+                                    let level = tag_lower.as_bytes()[1] - b'0';
+                                    let prefix = "#".repeat(level as usize);
+                                    fragments.push(format!("\n\n{prefix} {text}\n"));
                                 } else if tag_lower == "li" {
                                     fragments.push(format!("\n- {text}"));
-                                } else if tag_lower == "code"
-                                    || tag_lower == "pre"
-                                {
-                                    fragments
-                                        .push(format!("`{text}`"));
+                                } else if tag_lower == "code" || tag_lower == "pre" {
+                                    fragments.push(format!("`{text}`"));
                                 } else {
                                     fragments.push(text);
                                 }
@@ -675,7 +667,10 @@ mod tests {
         assert!(result.is_some(), "RSC extraction returned None");
         let md = result.unwrap();
         assert!(md.contains("Getting Started"), "Missing heading: {md}");
-        assert!(md.contains("Welcome to the documentation"), "Missing paragraph: {md}");
+        assert!(
+            md.contains("Welcome to the documentation"),
+            "Missing paragraph: {md}"
+        );
     }
 
     #[test]

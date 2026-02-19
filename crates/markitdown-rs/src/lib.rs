@@ -90,11 +90,7 @@ impl MarkItDown {
         self.converters.push(converter);
     }
 
-    pub fn convert_bytes(
-        &self,
-        input: &[u8],
-        info: &StreamInfo,
-    ) -> Result<ConversionResult> {
+    pub fn convert_bytes(&self, input: &[u8], info: &StreamInfo) -> Result<ConversionResult> {
         let info = detection::detect(input, info);
 
         for converter in &self.converters {

@@ -104,7 +104,7 @@ fn find_opf_path(archive: &mut zip::ZipArchive<Cursor<&[u8]>>) -> crate::Result<
             Err(e) => {
                 return Err(crate::Error::ConversionFailed(format!(
                     "container.xml parse error: {e}"
-                )))
+                )));
             }
             _ => {}
         }
@@ -145,15 +145,10 @@ fn parse_opf(
                         let mut media_type = String::new();
                         for attr in e.attributes().flatten() {
                             match attr.key.as_ref() {
-                                b"id" => {
-                                    id = String::from_utf8_lossy(&attr.value).to_string()
-                                }
-                                b"href" => {
-                                    href = String::from_utf8_lossy(&attr.value).to_string()
-                                }
+                                b"id" => id = String::from_utf8_lossy(&attr.value).to_string(),
+                                b"href" => href = String::from_utf8_lossy(&attr.value).to_string(),
                                 b"media-type" => {
-                                    media_type =
-                                        String::from_utf8_lossy(&attr.value).to_string()
+                                    media_type = String::from_utf8_lossy(&attr.value).to_string()
                                 }
                                 _ => {}
                             }
@@ -165,8 +160,7 @@ fn parse_opf(
                     "itemref" => {
                         for attr in e.attributes().flatten() {
                             if attr.key.as_ref() == b"idref" {
-                                spine_order
-                                    .push(String::from_utf8_lossy(&attr.value).to_string());
+                                spine_order.push(String::from_utf8_lossy(&attr.value).to_string());
                             }
                         }
                     }
@@ -177,7 +171,7 @@ fn parse_opf(
             Err(e) => {
                 return Err(crate::Error::ConversionFailed(format!(
                     "OPF parse error: {e}"
-                )))
+                )));
             }
             _ => {}
         }
@@ -229,11 +223,7 @@ fn extract_html_title(html: &str) -> Option<String> {
     let after = start + 7;
     let end = lower[after..].find("</title>")?;
     let title = html[after..after + end].trim().to_string();
-    if title.is_empty() {
-        None
-    } else {
-        Some(title)
-    }
+    if title.is_empty() { None } else { Some(title) }
 }
 
 #[cfg(not(feature = "html"))]

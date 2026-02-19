@@ -125,10 +125,7 @@ fn list_attachments(comp: &mut cfb::CompoundFile<Cursor<&[u8]>>) -> Vec<String> 
     // Attachment storages are named __attach_version1.0_#XXXXXXXX
     let entries: Vec<_> = comp
         .walk()
-        .filter(|e| {
-            e.is_storage()
-                && e.name().starts_with("__attach")
-        })
+        .filter(|e| e.is_storage() && e.name().starts_with("__attach"))
         .map(|e| e.path().to_path_buf())
         .collect();
 

@@ -42,7 +42,8 @@ impl DocumentConverter for XlsxConverter {
                 Ok(range) => {
                     let mut rows: Vec<Vec<String>> = Vec::new();
                     for row in range.rows() {
-                        let cells: Vec<String> = row.iter().map(|cell| cell_to_string(cell)).collect();
+                        let cells: Vec<String> =
+                            row.iter().map(|cell| cell_to_string(cell)).collect();
                         rows.push(cells);
                     }
 

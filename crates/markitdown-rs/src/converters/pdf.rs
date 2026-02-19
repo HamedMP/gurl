@@ -45,10 +45,8 @@ impl DocumentConverter for PdfConverter {
 
     fn convert(&self, input: &[u8], _info: &StreamInfo) -> crate::Result<ConversionResult> {
         // pdf-extract prints debug warnings to stdout; suppress them
-        let pages = suppress_stdout(|| {
-            pdf_extract::extract_text_from_mem_by_pages(input)
-        })
-        .map_err(|e| crate::Error::ConversionFailed(format!("PDF extraction failed: {e}")))?;
+        let pages = suppress_stdout(|| pdf_extract::extract_text_from_mem_by_pages(input))
+            .map_err(|e| crate::Error::ConversionFailed(format!("PDF extraction failed: {e}")))?;
 
         let mut md = String::new();
         for (i, page_text) in pages.iter().enumerate() {

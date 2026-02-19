@@ -21,8 +21,7 @@ impl DocumentConverter for CsvConverter {
 
         let mut rows: Vec<Vec<String>> = Vec::new();
         for result in reader.records() {
-            let record =
-                result.map_err(|e| crate::Error::ConversionFailed(e.to_string()))?;
+            let record = result.map_err(|e| crate::Error::ConversionFailed(e.to_string()))?;
             rows.push(record.iter().map(|s| s.to_string()).collect());
         }
 

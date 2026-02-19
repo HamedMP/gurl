@@ -28,8 +28,7 @@ impl DocumentConverter for WikipediaConverter {
         // Convert cleaned HTML to markdown
         #[cfg(feature = "html")]
         let md = {
-            htmd::convert(&cleaned)
-                .map_err(|e| crate::Error::ConversionFailed(e.to_string()))?
+            htmd::convert(&cleaned).map_err(|e| crate::Error::ConversionFailed(e.to_string()))?
         };
 
         #[cfg(not(feature = "html"))]
@@ -72,23 +71,23 @@ fn clean_wikipedia_html(html: &str) -> String {
 
     // Remove elements that add noise
     let remove_selectors = [
-        ".mw-editsection",      // [edit] links
-        ".reference",           // footnote references
-        "#toc",                 // table of contents
-        ".toc",                 // table of contents (alt)
-        ".navbox",              // navigation boxes
-        ".sistersitebox",       // sister site boxes
-        ".sidebar",             // sidebars
-        ".infobox",             // infoboxes (keep? remove for cleaner text)
-        ".metadata",            // metadata banners
-        ".hatnote",             // disambiguation notices
-        ".mbox-small",          // small message boxes
-        "sup.reference",        // reference superscripts
-        ".reflist",             // reference lists
-        ".refbegin",            // reference begin
-        ".external",            // external links section
-        "style",                // inline styles
-        "script",               // scripts
+        ".mw-editsection", // [edit] links
+        ".reference",      // footnote references
+        "#toc",            // table of contents
+        ".toc",            // table of contents (alt)
+        ".navbox",         // navigation boxes
+        ".sistersitebox",  // sister site boxes
+        ".sidebar",        // sidebars
+        ".infobox",        // infoboxes (keep? remove for cleaner text)
+        ".metadata",       // metadata banners
+        ".hatnote",        // disambiguation notices
+        ".mbox-small",     // small message boxes
+        "sup.reference",   // reference superscripts
+        ".reflist",        // reference lists
+        ".refbegin",       // reference begin
+        ".external",       // external links section
+        "style",           // inline styles
+        "script",          // scripts
     ];
 
     let mut cleaned = content_html;

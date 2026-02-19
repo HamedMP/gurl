@@ -12,12 +12,7 @@ impl DocumentConverter for RssConverter {
     fn accepts(&self, info: &StreamInfo) -> bool {
         matches!(
             info.mime_type.as_deref(),
-            Some(
-                "application/rss+xml"
-                    | "application/atom+xml"
-                    | "application/xml"
-                    | "text/xml"
-            )
+            Some("application/rss+xml" | "application/atom+xml" | "application/xml" | "text/xml")
         ) || matches!(info.extension.as_deref(), Some("rss" | "atom" | "feed"))
     }
 
