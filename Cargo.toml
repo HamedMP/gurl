@@ -1,0 +1,21 @@
+[workspace]
+resolver = "3"
+members = ["crates/gurl-core", "crates/gurl-cli"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/FinnaAI/gurl"
+description = "The HTTP runtime for AI agents"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "json", "cookies", "gzip", "brotli", "deflate"] }
+thiserror = "2"
+anyhow = "1"
+chrono = { version = "0.4", features = ["serde"] }
+url = { version = "2", features = ["serde"] }
+clap = { version = "4", features = ["derive"] }
