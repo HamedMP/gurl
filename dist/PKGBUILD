@@ -1,0 +1,31 @@
+# Maintainer: Hamed MP <hamed@hmp.is>
+pkgname=gurl
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="The HTTP runtime for AI agents"
+arch=('x86_64' 'aarch64')
+url="https://github.com/HamedMP/gurl"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('cargo')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/v${pkgver}.tar.gz")
+sha256sums=('SKIP')
+
+prepare() {
+    cd "${pkgname}-${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    cargo fetch --locked --target "$(rustc -vV | sed -n 's/host: //p')"
+}
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    export RUSTUP_TOOLCHAIN=stable
+    export CARGO_TARGET_DIR=target
+    cargo build --frozen --release -p gurl-cli
+}
+
+package() {
+    cd "${pkgname}-${pkgver}"
+    install -Dm0755 "target/release/gurl" "${pkgdir}/usr/bin/gurl"
+    install -Dm0644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

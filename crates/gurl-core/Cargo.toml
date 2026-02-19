@@ -3,6 +3,7 @@ name = "gurl-core"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+repository.workspace = true
 description = "Core engine for gurl: HTTP client, content intelligence, structured output"
 
 [dependencies]
@@ -13,4 +14,4 @@ tokio.workspace = true
 thiserror.workspace = true
 chrono.workspace = true
 url.workspace = true
-markitdown-rs = { path = "../markitdown-rs", features = ["all"] }
+markitdown-rs = { path = "../markitdown-rs", version = "0.1.0", features = ["all"] }

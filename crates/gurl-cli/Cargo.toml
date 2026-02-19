@@ -3,6 +3,7 @@ name = "gurl-cli"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
+repository.workspace = true
 description = "CLI for gurl: the HTTP runtime for AI agents"
 
 [[bin]]
@@ -10,7 +11,7 @@ name = "gurl"
 path = "src/main.rs"
 
 [dependencies]
-gurl-core = { path = "../gurl-core" }
+gurl-core = { path = "../gurl-core", version = "0.1.0" }
 clap.workspace = true
 tokio.workspace = true
 serde_json.workspace = true

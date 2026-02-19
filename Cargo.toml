@@ -19,3 +19,8 @@ anyhow = "1"
 chrono = { version = "0.4", features = ["serde"] }
 url = { version = "2", features = ["serde"] }
 clap = { version = "4", features = ["derive"] }
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
