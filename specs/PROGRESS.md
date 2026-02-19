@@ -4,19 +4,27 @@
 
 | Spec | Name | Status | Notes |
 |------|------|--------|-------|
-| 002 | Project Scaffolding | in-progress | |
-| 003 | Core HTTP Client | pending | |
-| 004 | HTML to Markdown | pending | |
+| 002 | Project Scaffolding | done | Cargo workspace, CI, clap CLI skeleton |
+| 003 | Core HTTP Client | done | reqwest, envelope, timing, all methods, --raw |
+| 004 | markitdown-rs | in-progress | Full Rust port of MarkItDown — Phase A (foundation + HTML) |
 | 005 | Content Detection | pending | |
 | 006 | CLI Polish | pending | |
 | 008 | MCP Server | pending | |
+
+### 004 markitdown-rs sub-progress
+
+| Phase | Converters | Status |
+|-------|-----------|--------|
+| A — Foundation + HTML | trait, detection, PlainText, HTML, CSV | in-progress |
+| B — Documents | PDF, DOCX, XLSX/XLS, EPUB, RSS | pending |
+| C — Media + Specialty | Image, Audio, Outlook, Jupyter, PPTX, ZIP, Wikipedia | pending |
+| D — Polish | gurl integration, standalone CLI, tests, benchmarks | pending |
 
 ## Phase 2 — Power Features
 
 | Spec | Name | Status | Notes |
 |------|------|--------|-------|
 | 007 | Resilience | pending | |
-| 009 | PDF Extraction | pending | |
 | 010 | Streaming | pending | |
 | 013 | Schema Validation | pending | |
 | 016 | Distribution | pending | |

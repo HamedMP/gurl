@@ -7,7 +7,7 @@
 ```
 002-scaffolding
  └── 003-http-client
-      ├── 004-html-to-markdown
+      ├── 004-markitdown-rs (Rust port of MarkItDown — all converters)
       │    └── 005-content-detection ─── 006-cli
       │                                    │
       │         008-mcp-server ◄───────────┘ (needs 003, 004, 005)
@@ -15,7 +15,6 @@
       ├── 007-resilience
       │    └── 012-workflow-engine
       │
-      ├── 009-pdf-extraction
       ├── 010-streaming
       ├── 011-response-diffing
       │    └── 014-watch-monitor
@@ -26,27 +25,28 @@
 015-cloud-tier (blocked until core CLI ships)
 ```
 
+Note: 009-pdf-extraction is now absorbed into 004-markitdown-rs (PdfConverter).
+
 ## Phases
 
 ### Phase 1 — MVP (ship something agents can use)
 
 | Spec | Name | Effort | Priority |
 |------|------|--------|----------|
-| 002 | Project Scaffolding | Half day | Must |
-| 003 | Core HTTP Client | 1-2 days | Must |
-| 004 | HTML to Markdown | 2-3 days | Must |
+| 002 | Project Scaffolding | Half day | DONE |
+| 003 | Core HTTP Client | 1-2 days | DONE |
+| 004 | markitdown-rs (full MarkItDown port) | 5-7 days | Must |
 | 005 | Content Detection | 1 day | Must |
 | 006 | CLI Polish | 1 day | Must |
 | 008 | MCP Server | 2-3 days | Must |
 
-**Ship v0.1.0 after Phase 1.** This gives agents: HTTP client + structured output + HTML-to-markdown + MCP integration.
+**Ship v0.1.0 after Phase 1.** This gives agents: HTTP client + structured output + full document conversion + MCP integration.
 
 ### Phase 2 — Power features
 
 | Spec | Name | Effort | Priority |
 |------|------|--------|----------|
 | 007 | Resilience (Retry/Timeout) | 1 day | High |
-| 009 | PDF Extraction | 1-2 days | Medium |
 | 010 | Streaming (SSE/WS) | 2 days | High |
 | 013 | Schema Validation | 1 day | Medium |
 | 016 | Distribution | 1 day | High |
@@ -67,9 +67,12 @@
 
 ## How to use these specs
 
-1. Pick a spec from the current phase
-2. Read it, then reference back to 001-init for full context
-3. Build it, check off the acceptance criteria
-4. Move to the next spec
+1. Check `PROGRESS.md` for current status
+2. Pick the next incomplete spec from the current phase
+3. Read the spec's `spec.md` — it has scope, architecture, and acceptance criteria
+4. Reference `specs/001-init/spec.md` for full context when needed
+5. Build it, check off acceptance criteria
+6. Update `PROGRESS.md` when done
+7. Commit with a meaningful message
 
 Each spec is designed to be self-contained enough that you can hand it to an AI agent (or tackle it yourself) without re-reading the entire 001 doc.
