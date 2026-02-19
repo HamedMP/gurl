@@ -75,10 +75,8 @@ pub async fn execute(method: &str, args: HttpArgs) -> Result<()> {
     let response = client.execute(req).await?;
 
     if args.raw {
-        match &response.content.body {
-            serde_json::Value::String(s) => print!("{s}"),
-            other => print!("{}", serde_json::to_string(other)?),
-        }
+        use std::io::Write;
+        std::io::stdout().write_all(&response.content.raw_body)?;
     } else {
         let output = serde_json::to_string_pretty(&response)?;
         println!("{output}");

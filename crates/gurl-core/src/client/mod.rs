@@ -6,12 +6,15 @@ pub use request::{Body, GurlRequest};
 pub use response::{ResponseMeta, Timing, TlsInfo};
 
 use crate::output::envelope::{Content, GurlResponse, RequestMeta};
+use markitdown_rs::converter::StreamInfo;
+use markitdown_rs::MarkItDown;
 use reqwest::Client;
 use std::time::Instant;
 
 pub struct GurlClient {
     http: Client,
     http_no_redirect: Client,
+    converter: MarkItDown,
 }
 
 impl GurlClient {
@@ -25,6 +28,7 @@ impl GurlClient {
         Ok(Self {
             http,
             http_no_redirect,
+            converter: MarkItDown::new(),
         })
     }
 
@@ -74,7 +78,66 @@ impl GurlClient {
             .await
             .map_err(|e| crate::Error::Request(e.to_string()))?;
 
-        let body_str = String::from_utf8_lossy(&body_bytes).to_string();
+        // Build content: try JSON first, then markitdown conversion, then raw
+        let content = if content_type.contains("application/json") {
+            // JSON: parse and return structured
+            let json_val = serde_json::from_slice(&body_bytes)
+                .unwrap_or(serde_json::Value::String(
+                    String::from_utf8_lossy(&body_bytes).into_owned(),
+                ));
+            Content {
+                content_type: "json".to_string(),
+                original_type: content_type,
+                title: None,
+                body: json_val,
+                metadata: None,
+                links: None,
+                images: None,
+                raw_body: body_bytes.to_vec(),
+            }
+        } else {
+            // Try markitdown conversion
+            let stream_info = StreamInfo {
+                mime_type: Some(content_type.clone()),
+                url: Some(url.to_string()),
+                ..Default::default()
+            };
+
+            match self.converter.convert_bytes(&body_bytes, &stream_info) {
+                Ok(result) => {
+                    let metadata = if result.metadata.is_empty() {
+                        None
+                    } else {
+                        Some(serde_json::to_value(&result.metadata).unwrap_or_default())
+                    };
+                    Content {
+                        content_type: "markdown".to_string(),
+                        original_type: content_type,
+                        title: result.title,
+                        body: serde_json::Value::String(result.body),
+                        metadata,
+                        links: None,
+                        images: None,
+                        raw_body: body_bytes.to_vec(),
+                    }
+                }
+                Err(_) => {
+                    // Fallback: raw body
+                    Content {
+                        content_type: "raw".to_string(),
+                        original_type: content_type,
+                        title: None,
+                        body: serde_json::Value::String(
+                            String::from_utf8_lossy(&body_bytes).into_owned(),
+                        ),
+                        metadata: None,
+                        links: None,
+                        images: None,
+                        raw_body: body_bytes.to_vec(),
+                    }
+                }
+            }
+        };
 
         Ok(GurlResponse {
             gurl: env!("CARGO_PKG_VERSION").to_string(),
@@ -96,15 +159,7 @@ impl GurlClient {
                 },
                 tls: None,
             },
-            content: Content {
-                content_type: "raw".to_string(),
-                original_type: content_type,
-                title: None,
-                body: serde_json::Value::String(body_str),
-                metadata: None,
-                links: None,
-                images: None,
-            },
+            content,
         })
     }
 }

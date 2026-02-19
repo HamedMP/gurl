@@ -147,4 +147,27 @@ mod tests {
         let m = MarkItDown::new();
         assert!(m.convert_file(Path::new("/nonexistent/file.txt")).is_err());
     }
+
+    #[test]
+    fn html_with_charset_parameter() {
+        let m = MarkItDown::new();
+        let info = StreamInfo {
+            mime_type: Some("text/html; charset=utf-8".into()),
+            ..Default::default()
+        };
+        let html = b"<html><body><article><p>Hello world</p></article></body></html>";
+        let result = m.convert_bytes(html, &info).unwrap();
+        assert!(result.body.contains("Hello world"));
+    }
+
+    #[test]
+    fn csv_detection_by_extension() {
+        let m = MarkItDown::new();
+        let info = StreamInfo {
+            filename: Some("data.csv".into()),
+            ..Default::default()
+        };
+        let result = m.convert_bytes(b"a,b\n1,2\n", &info).unwrap();
+        assert!(result.body.contains("| a | b |"));
+    }
 }

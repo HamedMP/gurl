@@ -31,6 +31,9 @@ pub struct Content {
     pub links: Option<Vec<Link>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub images: Option<Vec<Image>>,
+    /// Raw HTTP response body (excluded from JSON envelope)
+    #[serde(skip)]
+    pub raw_body: Vec<u8>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

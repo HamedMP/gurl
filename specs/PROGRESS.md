@@ -6,8 +6,8 @@
 |------|------|--------|-------|
 | 002 | Project Scaffolding | done | Cargo workspace, CI, clap CLI skeleton |
 | 003 | Core HTTP Client | done | reqwest, envelope, timing, all methods, --raw |
-| 004 | markitdown-rs | in-progress | Full Rust port of MarkItDown — Phase A-C done, 14 converters |
-| 005 | Content Detection | pending | |
+| 004 | markitdown-rs | done | Full Rust port, 14 converters, integrated into gurl-core |
+| 005 | Content Detection | done | MIME normalization, JSON/HTML/raw pipeline |
 | 006 | CLI Polish | pending | |
 | 008 | MCP Server | pending | |
 
@@ -18,7 +18,7 @@
 | A — Foundation + HTML | trait, detection, PlainText, HTML, CSV, RSS, Jupyter | done |
 | B — Documents | PDF, DOCX, XLSX/XLS, EPUB | done |
 | C — Media + Specialty | Image, Outlook, PPTX, ZIP, Wikipedia | done |
-| D — Polish | gurl integration, standalone CLI, tests, benchmarks | pending |
+| D — Polish | gurl integration, standalone CLI, tests, benchmarks | done |
 
 ## Phase 2 — Power Features
 

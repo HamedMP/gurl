@@ -3,6 +3,12 @@ use crate::converter::StreamInfo;
 pub fn detect(input: &[u8], info: &StreamInfo) -> StreamInfo {
     let mut result = info.clone();
 
+    // Normalize existing MIME type: strip parameters like charset
+    if let Some(mime) = &result.mime_type {
+        let base = mime.split(';').next().unwrap_or(mime).trim().to_lowercase();
+        result.mime_type = Some(base);
+    }
+
     // If no MIME type provided, try detection
     if result.mime_type.is_none() {
         // 1. Try magic bytes
@@ -79,4 +85,60 @@ fn looks_like_json(input: &[u8]) -> bool {
     let s = std::str::from_utf8(input).unwrap_or("");
     let trimmed = s.trim_start();
     trimmed.starts_with('{') || trimmed.starts_with('[')
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn normalizes_mime_with_charset() {
+        let info = StreamInfo {
+            mime_type: Some("text/html; charset=utf-8".into()),
+            ..Default::default()
+        };
+        let result = detect(b"<html>", &info);
+        assert_eq!(result.mime_type.as_deref(), Some("text/html"));
+    }
+
+    #[test]
+    fn detects_html_from_content() {
+        let info = StreamInfo::default();
+        let result = detect(b"<!DOCTYPE html><html><body>test</body></html>", &info);
+        assert_eq!(result.mime_type.as_deref(), Some("text/html"));
+    }
+
+    #[test]
+    fn detects_json_from_content() {
+        let info = StreamInfo::default();
+        let result = detect(b"{\"key\": \"value\"}", &info);
+        assert_eq!(result.mime_type.as_deref(), Some("application/json"));
+    }
+
+    #[test]
+    fn detects_text_fallback() {
+        let info = StreamInfo::default();
+        let result = detect(b"Hello, world!", &info);
+        assert_eq!(result.mime_type.as_deref(), Some("text/plain"));
+    }
+
+    #[test]
+    fn extracts_extension_from_filename() {
+        let info = StreamInfo {
+            filename: Some("report.pdf".into()),
+            ..Default::default()
+        };
+        let result = detect(&[0x25, 0x50, 0x44, 0x46], &info); // %PDF magic
+        assert_eq!(result.extension.as_deref(), Some("pdf"));
+    }
+
+    #[test]
+    fn extracts_extension_from_url() {
+        let info = StreamInfo {
+            url: Some("https://example.com/data.csv?v=2".into()),
+            ..Default::default()
+        };
+        let result = detect(b"a,b,c", &info);
+        assert_eq!(result.extension.as_deref(), Some("csv"));
+    }
 }
