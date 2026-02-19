@@ -1,0 +1,63 @@
+[package]
+name = "markitdown-rs"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Convert any document to Markdown — Rust port of Microsoft MarkItDown"
+keywords = ["markdown", "html", "pdf", "converter", "llm"]
+categories = ["text-processing", "command-line-utilities"]
+
+[features]
+default = ["html", "csv-convert", "rss", "ipynb"]
+html = ["dep:readabilityrs", "dep:htmd", "dep:scraper"]
+pdf = ["dep:pdf-extract"]
+docx = ["dep:docx-rs"]
+xlsx = ["dep:calamine"]
+csv-convert = ["dep:csv"]
+epub = ["dep:zip", "dep:quick-xml"]
+rss = ["dep:quick-xml", "dep:scraper"]
+image = ["dep:kamadak-exif"]
+outlook = ["dep:cfb"]
+ipynb = []
+pptx = ["dep:zip", "dep:quick-xml"]
+wikipedia = ["dep:scraper"]
+zip-convert = ["dep:zip"]
+all = ["html", "pdf", "docx", "xlsx", "csv-convert", "epub", "rss", "image", "outlook", "ipynb", "pptx", "wikipedia", "zip-convert"]
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+# MIME / magic bytes detection
+infer = "0.19"
+mime_guess = "2"
+
+# Charset detection
+encoding_rs = "0.8"
+
+# HTML (default feature)
+readabilityrs = { version = "0.1", optional = true }
+htmd = { version = "0.5", optional = true }
+scraper = { version = "0.22", optional = true }
+
+# PDF
+pdf-extract = { version = "0.7", optional = true }
+
+# Office
+calamine = { version = "0.26", optional = true }
+docx-rs = { version = "0.4", optional = true }
+
+# Structured formats
+csv = { version = "1", optional = true }
+quick-xml = { version = "0.37", optional = true }
+zip = { version = "2", optional = true, default-features = false, features = ["deflate"] }
+
+# Media
+kamadak-exif = { version = "0.6", optional = true }
+
+# Email
+cfb = { version = "0.10", optional = true }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
