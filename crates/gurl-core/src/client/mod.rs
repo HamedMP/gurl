@@ -44,6 +44,9 @@ impl GurlClient {
         };
         let mut builder = client.request(method.clone(), url.clone());
         builder = builder.headers(req.headers.clone());
+        if let Some(timeout) = req.timeout {
+            builder = builder.timeout(timeout);
+        }
         if let Some(body) = &req.body {
             match body {
                 Body::Raw(data) => builder = builder.body(data.clone()),

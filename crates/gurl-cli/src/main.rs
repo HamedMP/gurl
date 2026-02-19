@@ -31,10 +31,10 @@ enum Commands {
 }
 
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() {
     let cli = Cli::parse();
 
-    match cli.command {
+    let result = match cli.command {
         Some(Commands::Get(args)) => commands::execute("GET", args).await,
         Some(Commands::Post(args)) => commands::execute("POST", args).await,
         Some(Commands::Put(args)) => commands::execute("PUT", args).await,
@@ -45,12 +45,16 @@ async fn main() -> anyhow::Result<()> {
         None => {
             if cli.args.url.is_empty() {
                 use clap::CommandFactory;
-                Cli::command().print_help()?;
+                Cli::command().print_help().ok();
                 println!();
-                Ok(())
-            } else {
-                commands::execute("GET", cli.args).await
+                return;
             }
+            commands::execute("GET", cli.args).await
         }
+    };
+
+    if let Err(e) = result {
+        eprintln!("gurl: {e:#}");
+        std::process::exit(1);
     }
 }

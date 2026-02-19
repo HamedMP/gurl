@@ -8,7 +8,7 @@
 | 003 | Core HTTP Client | done | reqwest, envelope, timing, all methods, --raw |
 | 004 | markitdown-rs | done | Full Rust port, 14 converters, integrated into gurl-core |
 | 005 | Content Detection | done | MIME normalization, JSON/HTML/raw pipeline |
-| 006 | CLI Polish | pending | |
+| 006 | CLI Polish | done | TTY detection, --select, --form, --timeout, --output, --quiet, error handling |
 | 008 | MCP Server | pending | |
 
 ### 004 markitdown-rs sub-progress
