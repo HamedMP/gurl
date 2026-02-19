@@ -10,7 +10,7 @@ categories = ["text-processing", "command-line-utilities"]
 [features]
 default = ["html", "csv-convert", "rss", "ipynb"]
 html = ["dep:readabilityrs", "dep:htmd", "dep:scraper"]
-pdf = ["dep:pdf-extract"]
+pdf = ["dep:pdf-extract", "dep:libc"]
 docx = ["dep:docx-rs"]
 xlsx = ["dep:calamine"]
 csv-convert = ["dep:csv"]
@@ -43,6 +43,7 @@ scraper = { version = "0.22", optional = true }
 
 # PDF
 pdf-extract = { version = "0.7", optional = true }
+libc = { version = "0.2", optional = true }
 
 # Office
 calamine = { version = "0.26", optional = true }

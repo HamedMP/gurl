@@ -2,6 +2,37 @@ use crate::converter::{ConversionResult, DocumentConverter, StreamInfo};
 
 pub struct PdfConverter;
 
+#[cfg(unix)]
+fn suppress_stdout<F, R>(f: F) -> R
+where
+    F: FnOnce() -> R,
+{
+    use std::io::Write;
+    use std::os::fd::AsRawFd;
+    // Redirect stdout to /dev/null during pdf-extract (it prints debug noise)
+    if let Ok(devnull) = std::fs::OpenOptions::new().write(true).open("/dev/null") {
+        let stdout_fd = std::io::stdout().as_raw_fd();
+        let saved = unsafe { libc::dup(stdout_fd) };
+        let _ = std::io::stdout().flush();
+        unsafe { libc::dup2(devnull.as_raw_fd(), stdout_fd) };
+        let result = f();
+        let _ = std::io::stdout().flush();
+        unsafe { libc::dup2(saved, stdout_fd) };
+        unsafe { libc::close(saved) };
+        result
+    } else {
+        f()
+    }
+}
+
+#[cfg(not(unix))]
+fn suppress_stdout<F, R>(f: F) -> R
+where
+    F: FnOnce() -> R,
+{
+    f()
+}
+
 impl DocumentConverter for PdfConverter {
     fn name(&self) -> &'static str {
         "PDF"
@@ -13,8 +44,11 @@ impl DocumentConverter for PdfConverter {
     }
 
     fn convert(&self, input: &[u8], _info: &StreamInfo) -> crate::Result<ConversionResult> {
-        let pages = pdf_extract::extract_text_from_mem_by_pages(input)
-            .map_err(|e| crate::Error::ConversionFailed(format!("PDF extraction failed: {e}")))?;
+        // pdf-extract prints debug warnings to stdout; suppress them
+        let pages = suppress_stdout(|| {
+            pdf_extract::extract_text_from_mem_by_pages(input)
+        })
+        .map_err(|e| crate::Error::ConversionFailed(format!("PDF extraction failed: {e}")))?;
 
         let mut md = String::new();
         for (i, page_text) in pages.iter().enumerate() {

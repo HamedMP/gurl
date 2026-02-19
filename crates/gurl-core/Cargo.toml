@@ -13,4 +13,4 @@ tokio.workspace = true
 thiserror.workspace = true
 chrono.workspace = true
 url.workspace = true
-markitdown-rs = { path = "../markitdown-rs" }
+markitdown-rs = { path = "../markitdown-rs", features = ["all"] }
