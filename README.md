@@ -59,7 +59,24 @@ Every response is a JSON envelope with metadata + clean content. HTML becomes ma
 ## Install
 
 ```bash
-cargo install --git https://github.com/HamedMP/gurl
+# Shell installer (macOS / Linux)
+curl -fsSL https://raw.githubusercontent.com/HamedMP/gurl/main/install.sh | sh
+
+# Homebrew
+brew install HamedMP/gurl/gurl
+
+# Cargo
+cargo install gurl-cli
+
+# Debian / Ubuntu
+curl -LO https://github.com/HamedMP/gurl/releases/latest/download/gurl_0.1.0_amd64.deb
+sudo dpkg -i gurl_0.1.0_amd64.deb
+
+# Arch Linux (AUR)
+# PKGBUILD available at dist/PKGBUILD
+
+# Pre-built binaries
+# Download from https://github.com/HamedMP/gurl/releases
 ```
 
 Or build from source:
